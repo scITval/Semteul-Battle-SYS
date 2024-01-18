@@ -1,1 +1,1 @@
-# scITval-Contest-SYS
+# Semteul-Battle-SYS
