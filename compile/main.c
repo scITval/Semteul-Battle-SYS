@@ -10,7 +10,7 @@ int memLimit;      // 메모리 제한
 
 int main(void) {
     init();
-    file_parse();
+    // file_parse();
 
     return 0;
 }
@@ -20,8 +20,6 @@ void file_parse(void) {
     // init.txt open
     int fd_init;
     char init_path[BUFFER_SIZE];
-    strcpy(init_path, compile_directory);
-    strcat(init_path, "code/init.txt");
     if ((fd_init = open(init_path, O_RDONLY)) < 0) {
         fprintf(stderr, "open error for %s\n", init_path);
         exit(1);
