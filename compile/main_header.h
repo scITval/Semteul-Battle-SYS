@@ -15,7 +15,7 @@ char compile_directory[PATH_MAXLEN];
 char test_directory[PATH_MAXLEN];
 char result_directory[PATH_MAXLEN];
 
-char lang_type[] = {"c", "cpp", "java", "py"};
+char *lang_type[] = {"c", "cpp", "java", "py"};
 
 void init(void) {
     chdir("..");
