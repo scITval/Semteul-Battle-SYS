@@ -1,5 +1,6 @@
-#ifndef __MAIN_HEADER__
-#define __MAIN_HEADER__
+
+#ifndef __INIT_H__
+#define __INIT_H__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,4 +19,4 @@ void init(void) {
     getcwd(compile_directory, PATH_MAXLEN);
 }
 
-#endif // __MAIN_HEADER__
+#endif // __INIT_H__
