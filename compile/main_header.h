@@ -10,14 +10,12 @@
 #define BUFFER_SIZE 1024
 #define PATH_MAXLEN 128
 
-char home_directory[PATH_MAXLEN];
 char compile_directory[PATH_MAXLEN];
-char test_directory[PATH_MAXLEN];
-char result_directory[PATH_MAXLEN];
 
 char lang_type[] = {"c", "cpp", "java", "py"};
 
 void init(void) {
+    getcwd(compile_directory, PATH_MAXLEN);
 }
 
 #endif // __MAIN_HEADER__
