@@ -8,7 +8,7 @@ char compile_directory[PATH_MAXLEN];
 
 char *lang_type[] = {"c", "cpp", "java", "py"};
 
-extern void init(void);
-void file_parse(void);
+void init(void);
+char *get_compile_directory();
 
 #endif // __INIT_H__

@@ -17,13 +17,13 @@ init.o : init.c
 grade.o : grade.c
 	$(CC) -c $^
 
-# debug : $(OBJECTS)
-# 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
-# 	lldb ./$(TARGET)
-
 clean :
 	rm $(TARGET) $(TARGET).o
 	rm $(OBJECTS)
+
+# debug : $(OBJECTS)
+# 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
+# 	lldb ./$(TARGET)
 
 # dlean :
 # 	rm $(TARGET)
