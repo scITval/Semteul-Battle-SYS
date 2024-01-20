@@ -8,6 +8,6 @@ void init(void) {
     printf("%s\n", compile_directory);
 }
 
-char *get_compile_directory() {
+char *get_compile_directory(void) {
     return compile_directory;
 }

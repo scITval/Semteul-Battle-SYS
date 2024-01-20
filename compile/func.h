@@ -3,7 +3,7 @@
 
 // init.c
 void init(void);
-char *get_compile_directory();
+char *get_compile_directory(void);
 
 // grade.c
 
