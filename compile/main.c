@@ -1,6 +1,7 @@
-#include "main_header.h"
+// #include "init.h"
+// #include "grade.h"
 
-void file_parse(); // init.txt 파일을 파싱해서 정보들을 정리하는 함수
+extern void init(void);
 
 int problemNumber; // 문제 고유 번호
 int submitNumber;  // 제출 번호
@@ -13,17 +14,4 @@ int main(void) {
     // file_parse();
 
     return 0;
-}
-
-// init.txt 파일을 파싱해서 정보들을 정리하는 함수
-void file_parse(void) {
-    // init.txt open
-    int fd_init;
-    char init_path[BUFFER_SIZE];
-    if ((fd_init = open(init_path, O_RDONLY)) < 0) {
-        fprintf(stderr, "open error for %s\n", init_path);
-        exit(1);
-    }
-
-    close(fd_init);
 }

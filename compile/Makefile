@@ -1,21 +1,30 @@
 CC = gcc
 
-TARGET = prog
-OBJECTS = main.c
+TARGET = main
+OBJECTS = init.o grade.o
 FLAG = -g
 
-$(TARGET) : $(OBJECTS)
-	$(CC) -o $(TARGET) $(OBJECTS)
-	./$(TARGET)
-	rm ./$(TARGET)
+$(TARGET) : $(TARGET).o $(OBJECTS)
+	$(CC) -o $(TARGET) $(TARGET).o $(OBJECTS)
+#	./$(TARGET)
+
+$(TARGET).o : $(TARGET).c
+	$(CC) -c $(TARGET).c
+
+init.o : init.c
+	$(CC) -c $^
+
+grade.o : grade.c
+	$(CC) -c $^
 
 # debug : $(OBJECTS)
 # 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
 # 	lldb ./$(TARGET)
 
 clean :
-	rm $(TARGET)
+	rm $(TARGET) $(TARGET).o
+	rm $(OBJECTS)
 
-dlean :
-	rm $(TARGET)
-	rm -rf $(TARGET).dSYM
+# dlean :
+# 	rm $(TARGET)
+# 	rm -rf $(TARGET).dSYM
