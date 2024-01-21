@@ -9,7 +9,7 @@ void init_directory(void) {
     strcpy(home_directory, getenv("HOME"));
     strcat(home_directory, "/");
 
-    char work_path[PATH_MAXLEN];
+    char *work_path;
     sprintf(work_path, "%scode/semteul_project/", home_directory);
 
     strcpy(compile_directory, work_path);
