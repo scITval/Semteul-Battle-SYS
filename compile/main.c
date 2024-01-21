@@ -12,6 +12,9 @@ int memLimit;      // 메모리 제한
 
 int main(void) {
     init_directory();
+    char buf[1024];
+    printf("%s\n", getcwd(buf, 1024));
+    printf("%s\n%s\n%s\n%s\n", get_home_directory(), get_compile_directory(), get_test_directory(), get_result_directory());
 
     return 0;
 }
