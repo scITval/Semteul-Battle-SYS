@@ -1,7 +1,8 @@
-12345
-1
-c
-1
+35790
+5
+java
+100
+4096
 #include <stdio.h>
 int main() {
     int n, m;
