@@ -10,5 +10,6 @@ char *GetResultDirectory(void);
 void ParseInitFile(void);
 
 // grade.c
+int Grade(void);
 
 #endif

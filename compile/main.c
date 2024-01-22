@@ -4,17 +4,29 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int problemNumber; // 문제 고유 번호
-int submitNumber;  // 제출 번호
-char language[30];      // 제출 언어
-// char *language;      // 제출 언어
-int timeLimit;     // 시간 제한
-int memLimit;      // 메모리 제한
-
 int main(void) {
-    InitDirectory();
-    ParseInitFile();
+    // InitDirectory();
+    // ParseInitFile();
     // printf("문제 번호: %d\n제출 번호: %d\n제출 언어: %s\n시간 제한: %d\n메모리 제한: %d\n", problemNumber, submitNumber, language, timeLimit, memLimit);
+    int GradeResult;
+    if ((GradeResult = Grade()) == 0) { // 틀렸습니다.
+        printf("틀렸습니다.\n");
+    }
+    else if (GradeResult == 1) { // 맞았습니다.
+        printf("맞았습니다.\n");
+    }
+    else if (GradeResult == 2) { // 시간 초과
+        printf("시간 초과\n");
+    }
+    else if (GradeResult == 3) { // 메모리 초과
+        printf("메모리 초과\n");
+    }
+    else if (GradeResult == 4) { // 컴파일 에러
+        printf("컴파일 에러\n");
+    }
+    else { // 런타임 에러
+        printf("런타임 에러\n");
+    }
 
     return 0;
 }
