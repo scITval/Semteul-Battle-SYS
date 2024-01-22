@@ -2,12 +2,12 @@
 #define __FUNC_H__
 
 // init.c
-void init_directory(void);
-char *get_home_directory(void);
-char *get_compile_directory(void);
-char *get_test_directory(void);
-char *get_result_directory(void);
-void parse_init_file(void);
+void InitDirectory(void);
+char *GetHomeDirectory(void);
+char *GetCompileDirectory(void);
+char *GetTestDirectory(void);
+char *GetResultDirectory(void);
+void ParseInitFile(void);
 
 // grade.c
 

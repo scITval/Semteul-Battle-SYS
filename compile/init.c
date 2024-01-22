@@ -6,32 +6,32 @@
 #include <stdlib.h>
 #include <string.h>
 
-void init_directory(void) {
-    strcpy(home_directory, getenv("HOME"));
-    strcat(home_directory, "/");
+void InitDirectory(void) {
+    strcpy(homePATH, getenv("HOME"));
+    strcat(homePATH, "/");
 
     char work_path[PATH_MAXLEN];
-    strcpy(work_path, home_directory);
+    strcpy(work_path, homePATH);
     strcat(work_path, "semteul_project/");
 
-    strcpy(compile_directory, work_path);
-    strcat(compile_directory, "compile/");
+    strcpy(compilePATH, work_path);
+    strcat(compilePATH, "compile/");
 
-    strcpy(test_directory, work_path);
-    strcat(test_directory, "test/");
+    strcpy(testPATH, work_path);
+    strcat(testPATH, "test/");
 
-    strcpy(result_directory, work_path);
-    strcat(result_directory, "result/");
+    strcpy(resultPATH, work_path);
+    strcat(resultPATH, "result/");
 }
-char *get_home_directory(void) { return home_directory; }
-char *get_compile_directory(void) { return compile_directory; }
-char *get_test_directory(void) { return test_directory; }
-char *get_result_directory(void) { return result_directory; }
+char *GetHomeDirectory(void) { return homePATH; }
+char *GetCompileDirectory(void) { return compilePATH; }
+char *GetTestDirectory(void) { return testPATH; }
+char *GetResultDirectory(void) { return resultPATH; }
 
-void parse_init_file(void) {
+void ParseInitFile(void) {
     int fd_init;
     char init_file[PATH_MAXLEN];
-    strcpy(init_file, get_compile_directory());
+    strcpy(init_file, GetCompileDirectory());
     strcat(init_file, "code/init.txt");
     if ((fd_init = open(init_file, O_RDONLY)) < 0) {
         fprintf(stderr, "open error for %s\n", init_file);
@@ -61,14 +61,16 @@ void parse_init_file(void) {
     }
     printf("문제 번호: %d\n제출 번호: %d\n제출 언어: %s\n시간 제한: %d\n메모리 제한: %d\n", problemNumber, submitNumber, language, timeLimit, memLimit);
 
-    // int fd_source;
-    // char source_file[PATH_MAXLEN];
-    // strcpy(source_file, get_compile_directory());
+    int fd_source;
+    char source_file[PATH_MAXLEN];
+    // GetCompileDirectory();
+    // strcpy(source_file, GetCompileDirectory());
     // printf("%s\n", source_file);
     // strcat(source_file, "code/source.");
     // printf("%s\n", source_file);
     // strcat(source_file, language);
     // printf("%s\n", language);
+
     // if ((fd_source = open("")))
 
     // int len;

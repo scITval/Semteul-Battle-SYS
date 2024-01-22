@@ -12,9 +12,9 @@ int timeLimit;     // 시간 제한
 int memLimit;      // 메모리 제한
 
 int main(void) {
-    init_directory();
-    parse_init_file();
-    printf("문제 번호: %d\n제출 번호: %d\n제출 언어: %s\n시간 제한: %d\n메모리 제한: %d\n", problemNumber, submitNumber, language, timeLimit, memLimit);
+    InitDirectory();
+    ParseInitFile();
+    // printf("문제 번호: %d\n제출 번호: %d\n제출 언어: %s\n시간 제한: %d\n메모리 제한: %d\n", problemNumber, submitNumber, language, timeLimit, memLimit);
 
     return 0;
 }
