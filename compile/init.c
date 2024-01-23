@@ -59,7 +59,7 @@ void ParseInitFile(void) {
         }
         strcat(buf, temp);
     }
-    printf("문제 번호: %d\n제출 번호: %d\n제출 언어: %s\n시간 제한: %d\n메모리 제한: %d\n", problemNumber, submitNumber, language, timeLimit, memLimit);
+    printf("문제 번호: %d\n제출 번호: %d\n제출 언어: %d\n시간 제한: %d\n메모리 제한: %d\n", problemNumber, submitNumber, language, timeLimit, memLimit);
 
     int fd_source;
     char source_file[PATH_MAXLEN];

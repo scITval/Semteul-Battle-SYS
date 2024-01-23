@@ -20,6 +20,7 @@ grade.o : grade.c
 clean :
 	rm $(TARGET) $(TARGET).o
 	rm $(OBJECTS)
+	rm ./code/prog
 
 # debug : $(OBJECTS)
 # 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)

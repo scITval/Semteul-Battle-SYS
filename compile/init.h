@@ -11,8 +11,7 @@ char resultPATH[PATH_MAXLEN];
 
 extern int problemNumber; // 문제 고유 번호
 extern int submitNumber;  // 제출 번호
-extern char language[30];      // 제출 언어
-// extern char *language;      // 제출 언어
+extern int language;      // 제출 언어
 extern int timeLimit;     // 시간 제한
 extern int memLimit;      // 메모리 제한
 
