@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+// 절대 경로들을 초기화하는 함수
 void InitPath(void) {
     sprintf(homePath, "%s", getenv("HOME"));
     sprintf(workPath, "%s/semteul_project", GetHomePath());
@@ -13,6 +14,7 @@ void InitPath(void) {
     sprintf(testPath, "%s/test", GetWorkPath());
     sprintf(resultPath, "%s/result", GetWorkPath());
 }
+// 절대 경로를 반환하는 함수들
 char *GetHomePath(void) { return homePath; }
 char *GetWorkPath(void) { return workPath; }
 char *GetCompilePath(void) { return compilePath; }

@@ -12,6 +12,7 @@ char resultPath[PATH_MAXLEN];
 
 char *languageType[] = {"c", "cpp", "java", "py"};
 
+// grade.h
 extern int problemNumber; // 문제 고유 번호
 extern int submitNumber;  // 제출 번호
 extern int language;      // 제출 언어
