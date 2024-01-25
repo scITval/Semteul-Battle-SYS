@@ -1,6 +1,9 @@
 */.DS_Store
-/test
-/result
+test/
+result/
+compile/code/
 
 *.o
 main
+
+compile/code/source.*
