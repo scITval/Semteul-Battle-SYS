@@ -20,7 +20,7 @@ int Compile(void) {
     ForTest();
     // 이 위에 지워
 
-    char *languageType[] = {"c", "cpp", "java", "python"};
+    char *languageType[] = {"c", "cpp", "java", "py"};
     char *compiler[] = {"gcc", "g++", "java", "python3"};
     char *compilerPATH[] = {"/usr/bin/gcc", "/usr/bin/g++", "java", "/usr/bin/python3"};
 

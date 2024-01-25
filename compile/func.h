@@ -8,10 +8,16 @@ extern char *GetWorkPath(void);
 extern char *GetCompilePath(void);
 extern char *GetTestPath(void);
 extern char *GetResultPath(void);
-extern void ParseInitFile(void);
+extern int ParseInitFile(void);
 
 // grade.c
 extern int Compile(void);
 extern int Grade(void);
+
+extern int problemNumber; // 문제 고유 번호
+extern int submitNumber;  // 제출 번호
+extern int language;      // 제출 언어
+extern int timeLimit;     // 시간 제한
+extern int memLimit;      // 메모리 제한
 
 #endif

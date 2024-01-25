@@ -10,6 +10,8 @@ char compilePath[PATH_MAXLEN];
 char testPath[PATH_MAXLEN];
 char resultPath[PATH_MAXLEN];
 
+char *languageType[] = {"c", "cpp", "java", "py"};
+
 extern int problemNumber; // 문제 고유 번호
 extern int submitNumber;  // 제출 번호
 extern int language;      // 제출 언어
@@ -23,6 +25,6 @@ char *GetCompilePath(void);
 char *GetTestPath(void);
 char *GetResultPath(void);
 
-void ParseInitFile(void);
+int ParseInitFile(void);
 
 #endif // __INIT_H__
