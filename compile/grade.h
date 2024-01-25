@@ -10,6 +10,7 @@ int language;      // 제출 언어
 int timeLimit;     // 시간 제한
 int memLimit;      // 메모리 제한
 
+int Compile(void);
 int Grade(void);
 
 #endif // __GRADE_H__

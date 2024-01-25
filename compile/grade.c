@@ -16,7 +16,7 @@ void ForTest(void) {
     memLimit = 4096;
 }
 
-int Grade(void) {
+int Compile(void) {
     ForTest();
     // 이 위에 지워
 
@@ -25,7 +25,7 @@ int Grade(void) {
     char *compilerPATH[] = {"/usr/bin/gcc", "/usr/bin/g++", "java", "/usr/bin/python3"};
 
     int fd_source;
-    char sourcePATH[PATH_MAXLEN] = "/home/seongmo/semteul_project/compile/code/source";
+    char sourcePATH[PATH_MAXLEN];
     sprintf(sourcePATH, "/home/seongmo/semteul_project/compile/code/source.%s", languageType[language]);
     if ((fd_source = open(sourcePATH, O_RDONLY)) < 0) {
         fprintf(stderr, "open error for %s\n", sourcePATH);
@@ -58,5 +58,8 @@ int Grade(void) {
     }
 
     close(fd_source);
-    return -1;
+    return 0;
+}
+
+int Grade(void) {
 }
