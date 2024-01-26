@@ -60,7 +60,7 @@ int ParseInitFile(void) {
     
     int fd_source; // source.파일형식 파일 디스크립터
     char source_path[PATH_MAXLEN]; // source.파일형식 절대 경로
-    sprintf(source_path, "%s/code/source.%s", GetCompilePath(), languageType[language]);
+    sprintf(source_path, "%s/code/source.%s", GetCompilePath(), GetLanguageType(language));
     // source.파일형식 소스파일을 644권한으로 생성
     if ((fd_source = open(source_path, O_WRONLY | O_CREAT | O_TRUNC, 0644)) < 0) {
         fprintf(stderr, "create error for %s\n", source_path);
