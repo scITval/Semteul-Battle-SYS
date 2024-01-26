@@ -7,26 +7,13 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
-// 나중에 지울 함수
-void ForTest(void) {
-    problemNumber = 12345;
-    submitNumber = 5;
-    language = 0;
-    timeLimit = 100;
-    memLimit = 4096;
-}
-
 int Compile(void) {
-    ForTest();
-    // 이 위에 지워
-
-    char *languageType[] = {"c", "cpp", "java", "py"};
     char *compiler[] = {"gcc", "g++", "java", "python3"};
     char *compilerPATH[] = {"/usr/bin/gcc", "/usr/bin/g++", "java", "/usr/bin/python3"};
 
     int fd_source;
     char sourcePATH[PATH_MAXLEN];
-    sprintf(sourcePATH, "/home/seongmo/semteul_project/compile/code/source.%s", languageType[language]);
+    sprintf(sourcePATH, "%s/code/source.%s", GetCompilePath(), GetLanguageType(language));
     if ((fd_source = open(sourcePATH, O_RDONLY)) < 0) {
         fprintf(stderr, "open error for %s\n", sourcePATH);
         exit(1);
@@ -62,4 +49,9 @@ int Compile(void) {
 }
 
 int Grade(void) {
+}
+
+char *GetLanguageType(int lang) {
+    char *languageType[] = {"c", "cpp", "java", "py"};
+    return languageType[lang];
 }
