@@ -7,6 +7,11 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
+char *GetLanguageType(int lang) {
+    char *languageType[] = {"c", "cpp", "java", "py"};
+    return languageType[lang];
+}
+
 int Compile(void) {
     char *compiler[] = {"gcc", "g++", "java", "python3"};
     char *compilerPATH[] = {"/usr/bin/gcc", "/usr/bin/g++", "java", "/usr/bin/python3"};
@@ -49,9 +54,4 @@ int Compile(void) {
 }
 
 int Grade(void) {
-}
-
-char *GetLanguageType(int lang) {
-    char *languageType[] = {"c", "cpp", "java", "py"};
-    return languageType[lang];
 }
