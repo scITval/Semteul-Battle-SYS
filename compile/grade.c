@@ -12,6 +12,8 @@ char *GetLanguageType(int lang) {
     return languageType[lang];
 }
 
+// 언어 형식에 맞게 컴파일을 진행하고 compile/code/compile_result.txt 파일에 컴파일 결과를 쓰는 함수
+// 성공 시 0, 실패 시 1을 반환
 int Compile(void) {
     char *compiler[] = {"gcc", "g++", "java", "python3"};
     char *compilerPath[] = {"/usr/bin/gcc", "/usr/bin/g++", "java", "/usr/bin/python3"};
@@ -73,6 +75,17 @@ int Compile(void) {
     close(fd_source);
     close(fd_compile_result);
     return 0;
+}
+
+int IsCompileError(void) {
+    int fd_compile_result;
+    char compileResultPath[PATH_MAXLEN];
+    sprintf(compileResultPath, "%s/code/compile_result.txt", GetCompilePath());
+    if ((fd_compile_result = open(compileResultPath, O_RDONLY)) < 0) {
+        fprintf(stderr, "open error for %s\n", compileResultPath);
+        return 1;
+    }
+    return 2;
 }
 
 int Grade(void) {
