@@ -15,6 +15,7 @@ extern int ParseInitFile(void);
 // grade.c
 extern int Compile(void);
 extern int IsCompileError(void);
+extern int ExecProgram(void);
 extern int Grade(void);
 
 extern int problemNumber; // 문제 고유 번호

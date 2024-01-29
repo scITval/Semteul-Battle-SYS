@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 char *GetLanguageType(int lang) {
     char *languageType[] = {"c", "cpp", "java", "py"};
@@ -59,7 +60,12 @@ int Compile(void) {
 
     // 프로세스 생성 후 execv()
     pid_t pid;
-    if ((pid = fork()) == 0) {
+    int status;
+    if ((pid = fork()) < 0) {
+        fprintf(fdopen(originalStderr, "w"), "fork error in Compile()\n");
+        return 1;
+    }
+    else if (pid == 0) {
         if (execv(compilerPath[language], args) < 0) {
             dup2(originalStderr, STDERR_FILENO);
             fprintf(stderr, "execv error\n");
@@ -67,6 +73,9 @@ int Compile(void) {
             close(fd_compile_result);
             return 1;
         }
+    }
+    else {
+        wait(&status);
     }
     
     // stderr를 기존 값으로 돌려놓음
@@ -78,12 +87,8 @@ int Compile(void) {
 }
 
 // compile/code/compile_result.txt 파일을 읽고 컴파일 에러가 발생했는지 검사하는 함수
-// 컴파일 에러가 없다면 0, 있다면 1, 함수 호출 시 에러 발생 시 2를 반환
+// 컴파일 에러가 없다면 0, 있다면 1, 함수 호출 에러 발생 시 2를 반환
 int IsCompileError(void) {
-    // 컴파일 에러 파일 쓰여지기 기다리는 코드인데, 다른 방법 찾아
-    for (int i = 0; i < 10000000; i++) {}
-    // system("ls -l /home/seongmo/semteul_project/compile/code");
-
     char compileResultPath[PATH_MAXLEN];
     sprintf(compileResultPath, "%s/code/compile_result.txt", GetCompilePath());
     FILE *fp_compile_result;
@@ -102,6 +107,12 @@ int IsCompileError(void) {
     }
 
     fclose(fp_compile_result);
+    return 0;
+}
+
+// compile/code/prog 프로그램을 실행하는 함수
+// 런타임 에러가 없다면 0, 있다면 1, 함수 호출 에러 발생 시 2를 반환
+int ExecProgram(void) {
     return 0;
 }
 
