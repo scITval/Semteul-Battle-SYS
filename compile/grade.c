@@ -63,6 +63,8 @@ int Compile(void) {
     int status;
     if ((pid = fork()) < 0) {
         fprintf(fdopen(originalStderr, "w"), "fork error in Compile()\n");
+        close(fd_source);
+        close(fd_compile_result);
         return 1;
     }
     else if (pid == 0) {
