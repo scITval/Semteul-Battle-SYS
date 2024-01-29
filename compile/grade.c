@@ -77,15 +77,32 @@ int Compile(void) {
     return 0;
 }
 
+// compile/code/compile_result.txt 파일을 읽고 컴파일 에러가 발생했는지 검사하는 함수
+// 컴파일 에러가 없다면 0, 있다면 1, 함수 호출 시 에러 발생 시 2를 반환
 int IsCompileError(void) {
-    int fd_compile_result;
+    // 컴파일 에러 파일 쓰여지기 기다리는 코드인데, 다른 방법 찾아
+    for (int i = 0; i < 10000000; i++) {}
+    // system("ls -l /home/seongmo/semteul_project/compile/code");
+
     char compileResultPath[PATH_MAXLEN];
     sprintf(compileResultPath, "%s/code/compile_result.txt", GetCompilePath());
-    if ((fd_compile_result = open(compileResultPath, O_RDONLY)) < 0) {
-        fprintf(stderr, "open error for %s\n", compileResultPath);
-        return 1;
+    FILE *fp_compile_result;
+    if ((fp_compile_result = fopen(compileResultPath, "r")) == NULL) {
+        fprintf(stderr, "fopen error for %s\n", compileResultPath);
+        return 2;
     }
-    return 2;
+
+    char buf[BUFFER_SIZE];
+    char *errorStr = "error";
+    while (fgets(buf, sizeof(buf), fp_compile_result) != NULL) {
+        if (strstr(buf, errorStr) != NULL) {
+            fclose(fp_compile_result);
+            return 1;
+        }
+    }
+
+    fclose(fp_compile_result);
+    return 0;
 }
 
 int Grade(void) {

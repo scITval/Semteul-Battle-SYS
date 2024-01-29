@@ -11,6 +11,7 @@ int timeLimit;     // 시간 제한
 int memLimit;      // 메모리 제한
 
 int Compile(void);
+int IsCompileError(void);
 int Grade(void);
 char *GetLanguageType(int);
 

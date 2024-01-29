@@ -1,6 +1,8 @@
 #ifndef __FUNC_H__
 #define __FUNC_H__
 
+#define PATH_MAXLEN 128
+
 // init.c
 extern void InitPath(void);
 extern char *GetHomePath(void);
@@ -12,6 +14,7 @@ extern int ParseInitFile(void);
 
 // grade.c
 extern int Compile(void);
+extern int IsCompileError(void);
 extern int Grade(void);
 
 extern int problemNumber; // 문제 고유 번호
