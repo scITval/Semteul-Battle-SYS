@@ -6,7 +6,7 @@ FLAG = -g
 
 $(TARGET) : $(TARGET).o $(OBJECTS) remove.o
 	$(CC) -o $(TARGET) $(TARGET).o $(OBJECTS)
-	$(CC) -o remove remove.c
+	$(CC) -o remove remove.o
 
 $(TARGET).o : $(TARGET).c
 	$(CC) -c $(TARGET).c
