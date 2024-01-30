@@ -23,9 +23,6 @@ clean :
 	rm $(OBJECTS)
 	rm ../remove/remove
 
-rm :
-	rm ../remove/remove
-
 # debug : $(OBJECTS)
 # 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
 # 	lldb ./$(TARGET)
