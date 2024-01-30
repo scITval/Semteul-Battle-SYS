@@ -116,8 +116,6 @@ int IsCompileError(void) {
 // compile/code/prog 프로그램을 실행하는 함수
 // 런타임 에러가 없다면 0, 있다면 1, 함수 호출 에러 발생 시 2를 반환
 int ExecProgram(void) {
-    printf("시간 제한: %d\n", timeLimit);
-
     DIR *dir;
     struct dirent *entry;
     char inputPath[PATH_MAXLEN];
@@ -128,6 +126,7 @@ int ExecProgram(void) {
         return 2;
     }
 
+    // 표준 입출력 기존 값 복사
     int originalStdin = dup(STDIN_FILENO);
     int originalStdout = dup(STDOUT_FILENO);
 
@@ -143,16 +142,17 @@ int ExecProgram(void) {
         strcpy(testCasePath, inputPath);
         strcat(testCasePath, "/");
         strcat(testCasePath, entry->d_name);
-        printf("%s\n", testCasePath);
 
         pid_t pid;
         int status;
         if ((pid = fork()) < 0) {
             fprintf(stderr, "fork error in ExecProgram()\n");
+            closedir(dir);
             return 2;
         }
         // 자식 프로세스
         else if (pid == 0) { 
+            // 테스트 케이스의 입력 값
             int fd_input;
             if ((fd_input = open(testCasePath, O_RDONLY)) < 0) {
                 fprintf(stderr, "open error for %s\n", testCasePath);
@@ -160,20 +160,39 @@ int ExecProgram(void) {
                 return 2;
             }
 
+            // 프로그램의 실행 결과를 해당 경로에 씀
+            int fd_result;
+            char resultPath[PATH_MAXLEN];
+            strcpy(resultPath, GetResultPath());
+            strcat(resultPath, "/");
+            strcat(resultPath, entry->d_name);
+            if ((fd_result = open(resultPath, O_WRONLY | O_CREAT | O_TRUNC, 0644)) < 0) {
+                fprintf(stderr, "open error for %s\n", resultPath);
+                closedir(dir);
+                close(fd_input);
+                return 2;
+            }
+
+            // 표준 입출력을 파일로 변경
             dup2(fd_input, STDIN_FILENO);
+            dup2(fd_result, STDOUT_FILENO);
+
+            // 사용자 프로그램 실행
             char programPath[PATH_MAXLEN];
             sprintf(programPath, "%s/code/prog", GetCompilePath());
             char *programArgs[] = {programPath, NULL};
-            // char **programArgs = {programPath, NULL};
             execv(programPath, programArgs);
 
             close(fd_input);
+            close(fd_result);
         }
         else {
             wait(&status);
         }
     }
 
+    // 표준 입출력을 기존 값으로 돌려놓음
+    dup2(originalStdin, STDIN_FILENO);
     dup2(originalStdout, STDOUT_FILENO);
 
     closedir(dir);
