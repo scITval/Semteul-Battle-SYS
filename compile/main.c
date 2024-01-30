@@ -23,7 +23,7 @@ int main(void) {
 
     // grade.c - 컴파일 에러가 발생한 경우 코드의 실행 결과로 4를 result/result_제출번호.txt 파일에 씀
     int compileResult;
-    if ((compileResult = IsCompileError()) == 1) {
+    if ((compileResult = IsCompileError()) == 1) { // 컴파일 에러
         FILE *fp_result;
         char resultPath[PATH_MAXLEN];
         sprintf(resultPath, "%s/result_%d.txt", GetResultPath(), submitNumber);
@@ -33,28 +33,60 @@ int main(void) {
         }
 
         // 코드의 실행 결과로 4를 씀
-        printf("컴파일 에러 O\n");
+        // printf("컴파일 에러 O\n");
         fprintf(fp_result, "4");
 
         fclose(fp_result);
         return 0;
     }
-    else if (compileResult == 2) {
+    else if (compileResult == 2) { // IsCompileError() 함수 호출 에러
         fprintf(stderr, "IsCompileError() error in grade.c\n");
         exit(1);
     }
-    printf("컴파일 에러 X\n");
+    // printf("컴파일 에러 X\n");
 
     int execResult;
-    if ((execResult = ExecProgram()) == 1) {
-        printf("런타임 에러 O\n");
+    if ((execResult = ExecProgram()) == 1) { //런타임 에러
+        // printf("런타임 에러 O\n");
         return 0;
     }
-    else if (execResult == 2) {
+    else if (execResult == 2) { // ExecProgram() 함수 호출 에러
         fprintf(stderr, "execProgram() error in grade.c\n");
         exit(1);
     }
-    printf("런타임 에러 X\n");
+    else if (execResult == 3) { // 시간 초과
+        FILE *fp_result;
+        char resultPath[PATH_MAXLEN];
+        sprintf(resultPath, "%s/result_%d.txt", GetResultPath(), submitNumber);
+        if ((fp_result = fopen(resultPath, "w")) == NULL) {
+            fprintf(stderr, "create error for %s\n", resultPath);
+            exit(1);
+        }
+
+        // 코드의 실행 결과로 4를 씀
+        // printf("시간 초과\n");
+        fprintf(fp_result, "2");
+
+        fclose(fp_result);
+        return 0;
+    }
+    else if (execResult == 4) { // 메모리 초과
+        FILE *fp_result;
+        char resultPath[PATH_MAXLEN];
+        sprintf(resultPath, "%s/result_%d.txt", GetResultPath(), submitNumber);
+        if ((fp_result = fopen(resultPath, "w")) == NULL) {
+            fprintf(stderr, "create error for %s\n", resultPath);
+            exit(1);
+        }
+
+        // 코드의 실행 결과로 4를 씀
+        // printf("메모리 초과\n");
+        fprintf(fp_result, "3");
+
+        fclose(fp_result);
+        return 0;
+    }
+    // printf("런타임 에러 X\n");
 
     return 0;
 }
