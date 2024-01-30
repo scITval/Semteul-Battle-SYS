@@ -4,10 +4,9 @@ TARGET = main
 OBJECTS = init.o grade.o
 FLAG = -g
 
-$(TARGET) : $(TARGET).o $(OBJECTS)
+$(TARGET) : $(TARGET).o $(OBJECTS) remove.o
 	$(CC) -o $(TARGET) $(TARGET).o $(OBJECTS)
-	$(CC) -o ../remove/remove ../remove/remove.c
-#	./$(TARGET)
+	$(CC) -o remove remove.c
 
 $(TARGET).o : $(TARGET).c
 	$(CC) -c $(TARGET).c
@@ -18,13 +17,16 @@ init.o : init.c
 grade.o : grade.c
 	$(CC) -c $^
 
+remove.o : remove.c
+	$(CC) -c $^
+
 clean :
 	rm $(TARGET) $(TARGET).o
 	rm $(OBJECTS)
-	rm ../remove/remove
+	rm remove remove.o
 
 rm :
-	../remove/remove
+	./remove
 
 # debug : $(OBJECTS)
 # 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
