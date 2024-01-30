@@ -11,8 +11,8 @@ void deleteFilesInDirectory(const char *path) {
     // 디렉토리 열기
     dir = opendir(path);
     if (dir == NULL) {
-        perror("Error opening directory");
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "opendir error for %s\n", path);
+        exit(1);
     }
 
     // 디렉토리 내의 파일 순회
@@ -30,7 +30,7 @@ void deleteFilesInDirectory(const char *path) {
 
         // 파일 삭제
         if (remove(filePath) != 0) {
-            perror("Error deleting file");
+            fprintf(stderr, "remove error for %s\n", filePath);
         } else {
             printf("Deleted: %s\n", filePath);
         }
@@ -39,7 +39,7 @@ void deleteFilesInDirectory(const char *path) {
     closedir(dir);
 }
 
-int main() {
+int main(void) {
     char *resultPath = "../result";
     char *codePath = "../compile/code";
     deleteFilesInDirectory(resultPath);
