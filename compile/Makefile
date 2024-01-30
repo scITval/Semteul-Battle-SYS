@@ -6,6 +6,7 @@ FLAG = -g
 
 $(TARGET) : $(TARGET).o $(OBJECTS)
 	$(CC) -o $(TARGET) $(TARGET).o $(OBJECTS)
+	$(CC) -o ../remove/remove ../remove/remove.c
 #	./$(TARGET)
 
 $(TARGET).o : $(TARGET).c
@@ -20,7 +21,10 @@ grade.o : grade.c
 clean :
 	rm $(TARGET) $(TARGET).o
 	rm $(OBJECTS)
-	# rm ./code/prog
+	../remove/remove
+
+rm :
+	../remove/remove
 
 # debug : $(OBJECTS)
 # 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
