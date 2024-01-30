@@ -18,5 +18,6 @@ char *GetLanguageType(int);
 
 // init.c
 extern char *GetCompilePath(void);
+extern char *GetTestPath(void);
 
 #endif // __GRADE_H__

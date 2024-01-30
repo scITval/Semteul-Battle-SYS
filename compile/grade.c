@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <dirent.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -115,6 +116,67 @@ int IsCompileError(void) {
 // compile/code/prog 프로그램을 실행하는 함수
 // 런타임 에러가 없다면 0, 있다면 1, 함수 호출 에러 발생 시 2를 반환
 int ExecProgram(void) {
+    printf("시간 제한: %d\n", timeLimit);
+
+    DIR *dir;
+    struct dirent *entry;
+    char inputPath[PATH_MAXLEN];
+    sprintf(inputPath, "%s/input/%d", GetTestPath(), problemNumber);
+    // test/input/문제번호 디렉토리 열기
+    if ((dir = opendir(inputPath)) == NULL) {
+        fprintf(stderr, "opendir error for %s\n", inputPath);
+        return 2;
+    }
+
+    int originalStdin = dup(STDIN_FILENO);
+    int originalStdout = dup(STDOUT_FILENO);
+
+    // 디렉토리 내의 파일 순회
+    while ((entry = readdir(dir)) != NULL) {
+        // 현재 디렉토리(.)나 상위 디렉토리(..)는 무시
+        if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) {
+            continue;
+        }
+
+        // 파일 경로 생성
+        char testCasePath[PATH_MAXLEN];
+        strcpy(testCasePath, inputPath);
+        strcat(testCasePath, "/");
+        strcat(testCasePath, entry->d_name);
+        printf("%s\n", testCasePath);
+
+        pid_t pid;
+        int status;
+        if ((pid = fork()) < 0) {
+            fprintf(stderr, "fork error in ExecProgram()\n");
+            return 2;
+        }
+        // 자식 프로세스
+        else if (pid == 0) { 
+            int fd_input;
+            if ((fd_input = open(testCasePath, O_RDONLY)) < 0) {
+                fprintf(stderr, "open error for %s\n", testCasePath);
+                closedir(dir);
+                return 2;
+            }
+
+            dup2(fd_input, STDIN_FILENO);
+            char programPath[PATH_MAXLEN];
+            sprintf(programPath, "%s/code/prog", GetCompilePath());
+            char *programArgs[] = {programPath, NULL};
+            // char **programArgs = {programPath, NULL};
+            execv(programPath, programArgs);
+
+            close(fd_input);
+        }
+        else {
+            wait(&status);
+        }
+    }
+
+    dup2(originalStdout, STDOUT_FILENO);
+
+    closedir(dir);
     return 0;
 }
 

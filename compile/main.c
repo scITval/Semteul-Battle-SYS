@@ -45,5 +45,16 @@ int main(void) {
     }
     printf("컴파일 에러 X\n");
 
+    int execResult;
+    if ((execResult = ExecProgram()) == 1) {
+        printf("런타임 에러 O\n");
+        return 0;
+    }
+    else if (execResult == 2) {
+        fprintf(stderr, "execProgram() error in grade.c\n");
+        exit(1);
+    }
+    printf("런타임 에러 X\n");
+
     return 0;
 }
