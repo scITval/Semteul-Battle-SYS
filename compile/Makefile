@@ -21,10 +21,10 @@ grade.o : grade.c
 clean :
 	rm $(TARGET) $(TARGET).o
 	rm $(OBJECTS)
-	../remove/remove
+	rm ../remove/remove
 
 rm :
-	../remove/remove
+	rm ../remove/remove
 
 # debug : $(OBJECTS)
 # 	$(CC) -o $(TARGET) $(OBJECTS) $(FLAG)
