@@ -23,8 +23,10 @@ void deleteFilesInDirectory(const char *path) {
         }
 
         // 파일 경로 생성
-        char filePath[256];
-        snprintf(filePath, sizeof(filePath), "%s/%s", path, entry->d_name);
+        char filePath[1024];
+        strcpy(filePath, path);
+        strcat(filePath, "/");
+        strcat(filePath, entry->d_name);
 
         // 파일 삭제
         if (remove(filePath) != 0) {
