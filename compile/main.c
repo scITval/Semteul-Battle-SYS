@@ -7,21 +7,26 @@
 #include <sys/wait.h>
 
 int main(void) {
+    // init.c - 디렉토리 경로 초기화
+    InitPath();
+
     // 기존 파일들 삭제
     pid_t pid;
+    int status;
     if ((pid = fork()) < 0) {
         fprintf(stderr, "fork error in main()\n");
         exit(1);
     }
     else if (pid == 0) {
-        execl("/home/seongmo/semteul_project/compile/remove", "/home/seongmo/semteul_project/compile/remove", (char *)NULL);
+        char removeProg[PATH_MAXLEN];
+        sprintf(removeProg, "%s/remove", GetCompilePath());
+        printf("%s\n", removeProg);
+        execl(removeProg, removeProg, (char *)NULL);
+        exit(0);
     }
     else {
-        wait(0);
+        wait(&status);
     }
-
-    // init.c - 디렉토리 경로 초기화
-    InitPath();
 
     // init.c - code/compile/init.txt 파일 내용 읽기
     if (ParseInitFile() == 1) {
