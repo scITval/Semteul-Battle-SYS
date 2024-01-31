@@ -148,7 +148,7 @@ int ExecProgram(void) {
         strcat(testCasePath, "/");
         strcat(testCasePath, entry->d_name);
 
-        struct timeval start, end;
+        struct timeval start;
         gettimeofday(&start, NULL);
         long timeLimitMicros = timeLimit * CLOCKS_PER_SEC;
 
@@ -203,41 +203,57 @@ int ExecProgram(void) {
             struct timeval mid;
             long seconds, micros;
             int status;
+            // 자식 프로세스가 정상 종료되거나 강제 종료될 때까지 반복
             while (1) {
+                // 계속해서 경과 시간 체크
                 gettimeofday(&mid, NULL);
                 seconds = mid.tv_sec - start.tv_sec;
                 micros = (seconds * CLOCKS_PER_SEC) + mid.tv_usec - start.tv_usec;
 
+                // 마이크로초 단위로 시간 초과를 검사
+                // 시간 초과 발생한 경우
                 if (micros > timeLimit * CLOCKS_PER_SEC) {
                     kill(pid, SIGKILL);
                     fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
-                    fprintf(fdopen(originalStdout, "w"), "자식 프로세스 강제 종료\n");
-                    return 3; // 시간 초과
+
+                    // 표준 입출력을 기존 값으로 돌려놓음
+                    dup2(originalStdin, STDIN_FILENO);
+                    dup2(originalStdout, STDOUT_FILENO);
+
+                    closedir(dir);
+                    return 3;
                 }
 
+                // 자식 프로세스의 상태를 확인
                 pid_t isTerminatedPid = waitpid(pid, &status, WNOHANG);
+
                 // 자식 프로세스가 종료된 경우
                 if (isTerminatedPid > 0) {
 
-                    // 자식 프로세스 정상 종료
+                    // 자식 프로세스가 정상 종료된 경우
                     if (WIFEXITED(status)) {
                         fprintf(fdopen(originalStdout, "w"), "정상 종료, 종료시간: %ld 마이크로초\n", micros);
                         break;
                         // 정상 종료시 추가적인 작업 수행 가능
                     }
-                    // 자식 프로세스 강제 종료
+                    // 자식 프로세스가 강제 종료된 경우(시간 초과)
                     else if (WIFSIGNALED(status)) {
                         fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
-                        fprintf(fdopen(originalStdout, "w"), "자식 프로세스 강제 종료\n");
-                        return 3; // 시간 초과
+
+                        // 표준 입출력을 기존 값으로 돌려놓음
+                        dup2(originalStdin, STDIN_FILENO);
+                        dup2(originalStdout, STDOUT_FILENO);
+
+                        closedir(dir);
+                        return 3;
                     }                
                 }
             }
 
-            if (WIFEXITED(status)) {
-                fprintf(fdopen(originalStdout, "w"), "자식 프로세스 정상 종료\n\n");
-                // 정상 종료시 추가적인 작업 수행 가능
-            }
+            // 시간 초과 발생하지 않은 경우
+            // if (WIFEXITED(status)) {
+                // fprintf(fdopen(originalStdout, "w"), "자식 프로세스 정상 종료\n\n");
+            // }
         }
     }
 

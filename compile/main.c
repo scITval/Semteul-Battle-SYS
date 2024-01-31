@@ -4,8 +4,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 int main(void) {
+    // 기존 파일들 삭제
+    pid_t pid;
+    if ((pid = fork()) < 0) {
+        fprintf(stderr, "fork error in main()\n");
+        exit(1);
+    }
+    else if (pid == 0) {
+        execl("/home/seongmo/semteul_project/compile/remove", "/home/seongmo/semteul_project/compile/remove", (char *)NULL);
+    }
+    else {
+        wait(0);
+    }
+
     // init.c - 디렉토리 경로 초기화
     InitPath();
 
