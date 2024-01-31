@@ -4,6 +4,10 @@
 #include <dirent.h>
 #include <sys/types.h>
 
+#define PATH_MAXLEN 128
+char homePath[PATH_MAXLEN];
+char workPath[PATH_MAXLEN];
+
 void deleteFilesInDirectory(const char *path) {
     DIR *dir;
     struct dirent *entry;
@@ -39,9 +43,19 @@ void deleteFilesInDirectory(const char *path) {
     closedir(dir);
 }
 
+char *GetHomePath(void) { return homePath; }
+char *GetWorkPath(void) { return workPath; }
+
 int main(void) {
-    char *resultPath = "../result";
-    char *codePath = "../compile/code";
+    sprintf(homePath, "%s", getenv("HOME"));
+    sprintf(workPath, "%s/semteul_project", GetHomePath());
+
+    char resultPath[PATH_MAXLEN];
+    char codePath[PATH_MAXLEN];
+
+    sprintf(resultPath, "%s/result", GetWorkPath());
+    sprintf(codePath, "%s/compile/code", GetWorkPath());
+
     deleteFilesInDirectory(resultPath);
     deleteFilesInDirectory(codePath);
 }

@@ -20,7 +20,6 @@ int main(void) {
     else if (pid == 0) {
         char removeProg[PATH_MAXLEN];
         sprintf(removeProg, "%s/remove", GetCompilePath());
-        printf("%s\n", removeProg);
         execl(removeProg, removeProg, (char *)NULL);
         exit(0);
     }
