@@ -63,9 +63,9 @@ int main(void) {
             exit(1);
         }
 
-        // 코드의 실행 결과로 4를 씀
-        // printf("시간 초과\n");
+        // 코드의 실행 결과로 2를 씀
         fprintf(fp_result, "2");
+        // printf("시간 초과\n");
 
         fclose(fp_result);
         return 0;
@@ -79,9 +79,9 @@ int main(void) {
             exit(1);
         }
 
-        // 코드의 실행 결과로 4를 씀
-        // printf("메모리 초과\n");
+        // 코드의 실행 결과로 3를 씀
         fprintf(fp_result, "3");
+        // printf("메모리 초과\n");
 
         fclose(fp_result);
         return 0;

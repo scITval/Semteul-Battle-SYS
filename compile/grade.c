@@ -6,8 +6,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <time.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/time.h>
 
 char *GetLanguageType(int lang) {
     char *languageType[] = {"c", "cpp", "java", "py"};
@@ -76,6 +79,7 @@ int Compile(void) {
             close(fd_compile_result);
             return 1;
         }
+        exit(0);
     }
     else {
         wait(&status);
@@ -114,7 +118,8 @@ int IsCompileError(void) {
 }
 
 // compile/code/prog 프로그램을 실행하는 함수
-// 런타임 에러가 없다면 0, 있다면 1, 함수 호출 에러 발생 시 2를 반환
+// 런타임 에러가 없다면 0, 있다면 1, 함수 호출 에러 발생 시 2
+// 실행 중에 시간 초과가 발생한 경우 3, 메모리 초과가 발생한 경우 4를 반환
 int ExecProgram(void) {
     DIR *dir;
     struct dirent *entry;
@@ -143,6 +148,10 @@ int ExecProgram(void) {
         strcat(testCasePath, "/");
         strcat(testCasePath, entry->d_name);
 
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
+        long timeLimitMicros = timeLimit * CLOCKS_PER_SEC;
+
         pid_t pid;
         int status;
         if ((pid = fork()) < 0) {
@@ -151,6 +160,7 @@ int ExecProgram(void) {
             return 2;
         }
         // 자식 프로세스
+        // 사용자 프로그램 실행
         else if (pid == 0) { 
             // 테스트 케이스의 입력 값
             int fd_input;
@@ -185,9 +195,49 @@ int ExecProgram(void) {
 
             close(fd_input);
             close(fd_result);
+            exit(0);
         }
+        // 부모 프로세스
+        // 사용자 프로그램의 시간 초과를 검사
         else {
-            wait(&status);
+            struct timeval mid;
+            long seconds, micros;
+            int status;
+            while (1) {
+                gettimeofday(&mid, NULL);
+                seconds = mid.tv_sec - start.tv_sec;
+                micros = (seconds * CLOCKS_PER_SEC) + mid.tv_usec - start.tv_usec;
+
+                if (micros > timeLimit * CLOCKS_PER_SEC) {
+                    kill(pid, SIGKILL);
+                    fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
+                    fprintf(fdopen(originalStdout, "w"), "자식 프로세스 강제 종료\n");
+                    return 3; // 시간 초과
+                }
+
+                pid_t isTerminatedPid = waitpid(pid, &status, WNOHANG);
+                // 자식 프로세스가 종료된 경우
+                if (isTerminatedPid > 0) {
+
+                    // 자식 프로세스 정상 종료
+                    if (WIFEXITED(status)) {
+                        fprintf(fdopen(originalStdout, "w"), "정상 종료, 종료시간: %ld 마이크로초\n", micros);
+                        break;
+                        // 정상 종료시 추가적인 작업 수행 가능
+                    }
+                    // 자식 프로세스 강제 종료
+                    else if (WIFSIGNALED(status)) {
+                        fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
+                        fprintf(fdopen(originalStdout, "w"), "자식 프로세스 강제 종료\n");
+                        return 3; // 시간 초과
+                    }                
+                }
+            }
+
+            if (WIFEXITED(status)) {
+                fprintf(fdopen(originalStdout, "w"), "자식 프로세스 정상 종료\n\n");
+                // 정상 종료시 추가적인 작업 수행 가능
+            }
         }
     }
 
@@ -200,4 +250,5 @@ int ExecProgram(void) {
 }
 
 int Grade(void) {
+    return 0;
 }
