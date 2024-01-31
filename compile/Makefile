@@ -23,6 +23,7 @@ remove.o : remove.c
 clean :
 	rm $(TARGET) $(TARGET).o
 	rm $(OBJECTS)
+	./remove
 	rm remove remove.o
 
 rm :
