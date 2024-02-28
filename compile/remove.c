@@ -36,7 +36,7 @@ void deleteFilesInDirectory(const char *path) {
         if (remove(filePath) != 0) {
             fprintf(stderr, "remove error for %s\n", filePath);
         } else {
-            printf("Deleted: %s\n", filePath);
+            // printf("Deleted: %s\n", filePath);
         }
     }
 

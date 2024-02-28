@@ -214,7 +214,7 @@ int ExecProgram(void) {
                 // 시간 초과 발생한 경우
                 if (micros > timeLimit * CLOCKS_PER_SEC) {
                     kill(pid, SIGKILL);
-                    fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
+                    // fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
 
                     // 표준 입출력을 기존 값으로 돌려놓음
                     dup2(originalStdin, STDIN_FILENO);
@@ -232,13 +232,13 @@ int ExecProgram(void) {
 
                     // 자식 프로세스가 정상 종료된 경우
                     if (WIFEXITED(status)) {
-                        fprintf(fdopen(originalStdout, "w"), "정상 종료, 종료시간: %ld 마이크로초\n", micros);
+                        // fprintf(fdopen(originalStdout, "w"), "정상 종료, 종료시간: %ld 마이크로초\n", micros);
                         break;
                         // 정상 종료시 추가적인 작업 수행 가능
                     }
                     // 자식 프로세스가 강제 종료된 경우(시간 초과)
                     else if (WIFSIGNALED(status)) {
-                        fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
+                        // fprintf(fdopen(originalStdout, "w"), "강제 종료, 종료시간: %ld 마이크로초\n", micros);
 
                         // 표준 입출력을 기존 값으로 돌려놓음
                         dup2(originalStdin, STDIN_FILENO);
