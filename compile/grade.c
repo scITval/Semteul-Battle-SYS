@@ -262,9 +262,163 @@ int ExecProgram(void) {
     dup2(originalStdout, STDOUT_FILENO);
 
     closedir(dir);
+
+    // 프로그램 실행에 문제가 없는 경우
     return 0;
 }
 
+// 채점을 위해 파일 내용을 한 글자씩 읽는 함수
+// 두 파일의 내용이 같으면 0, 다르면 1을 반환
+// 함수 호출 에러 시 2를 반환
+int CompareContext(int fd1, int fd2) {
+    char ch1, ch2;
+    int readRet1, readRet2;
+
+    while (1) {
+        if ((readRet1 = read(fd1, &ch1, 1)) < 0) {
+            fprintf(stderr, "read error for fd1\n");
+            return 2;
+        }
+        if ((readRet2 = read(fd2, &ch2, 1)) < 0) {
+            fprintf(stderr, "read error for fd2\n");
+            return 2;
+        }
+
+        // 둘 중 하나라도 EOF이면 파일 읽기 중단
+        if (readRet1 == 0 || readRet2 == 0)
+            break;
+
+        if (ch1 == '\n' && (ch2 == ' ' || ch2 == '\t')) {
+            if ((readRet2 = read(fd2, &ch2, 1)) < 0) {
+                fprintf(stderr, "read error for fd2\n");
+                return 2;
+            }
+        }
+        else if (ch2 == '\n' && (ch1 == ' ' || ch1 == '\t')) {
+            if ((readRet1 = read(fd1, &ch1, 1)) < 0) {
+                fprintf(stderr, "read error for fd1\n");
+                return 2;
+            }
+        }
+
+        // 둘 중 하나라도 EOF이면 파일 읽기 중단
+        if (readRet1 == 0 || readRet2 == 0)
+            break;
+
+        // 파일의 내용이 다른 경우
+        if (ch1 != ch2) {
+            return 1;
+        }
+    }
+
+    // 두 파일이 동시에 EOF라면 두 파일은 같은 내용
+    if (readRet1 == 0 && readRet2 == 0) {
+        return 0;
+    }
+    // 두번째 파일이 EOF 이전까지 공백, 탭, 개행의 내용만 나온다면 두 파일은 같은 내용
+    else if (readRet1 == 0) {
+        if (ch2 != ' ' && ch2 != '\t' && ch2 != '\n')
+            return 1;
+
+        while (readRet2 != 0) {
+            if ((readRet2 = read(fd2, &ch2, 1)) < 0) {
+                fprintf(stderr, "read error for fd2\n");
+                return 2;
+            }
+            else if (readRet2 == 0) {
+                return 0;
+            }
+            else {
+                if (ch2 != ' ' && ch2 != '\t' && ch2 != '\n')
+                    return 1;
+            }
+        }
+    }
+    // 첫번째 파일이 EOF 이전까지 공백, 탭, 개행의 내용만 나온다면 두 파일은 같은 내용
+    else if (readRet2 == 0) {
+        if (ch1 != ' ' && ch1 != '\t' && ch1 != '\n')
+            return 1;
+
+        while (readRet1 != 0) {
+            if ((readRet1 = read(fd1, &ch1, 1)) < 0) {
+                fprintf(stderr, "read error for fd1\n");
+                return 2;
+            }
+            else if (readRet1 == 0) {
+                return 0;
+            }
+            else {
+                if (ch1 != ' ' && ch1 != '\t' && ch1 != '\n')
+                    return 1;
+            }
+        }
+    }
+
+    // 두 파일의 내용이 같은 경우
+    return 0;
+}
+
+// 사용자 프로그램에 대한 채점을 진행하는 함수
+// 모두 맞은 경우 0을, 하나의 채점 케이스라도 틀린 경우 1을 반환
 int Grade(void) {
+    DIR *dir;
+    struct dirent *entry;
+    char outputPath[PATH_MAXLEN];
+    sprintf(outputPath, "%s/output/%d", GetTestPath(), problemNumber);
+    // test/output/문제번호 디렉토리 열기
+    if ((dir = opendir(outputPath)) == NULL) {
+        fprintf(stderr, "opendir error for %s\n", outputPath);
+        return 2;
+    }
+
+    // 디렉토리 내의 파일 순회
+    while ((entry = readdir(dir)) != NULL) {
+        // 현재 디렉토리(.)나 상위 디렉토리(..)는 무시
+        if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) {
+            continue;
+        }
+
+        // 사용자 프로그램 실행 결과 파일 열기
+        // FILE *fp_result;
+        int fd_result;
+        char resultPath[PATH_MAXLEN];
+        strcpy(resultPath, GetResultPath());
+        strcat(resultPath, "/");
+        strcat(resultPath, entry->d_name);
+        if ((fd_result = open(resultPath, O_RDONLY)) < 0) {
+            fprintf(stderr, "open error for %s\n", resultPath);
+            closedir(dir);
+            return 2;
+        }
+
+        // 문제 출력 파일 열기
+        FILE *fp_output;
+        int fd_output;
+        char outputPath[PATH_MAXLEN];
+        sprintf(outputPath, "%s/output/%d/", GetTestPath(), problemNumber);
+        strcat(outputPath, entry->d_name);
+        if ((fd_output = open(outputPath, O_RDONLY)) < 0) {
+            fprintf(stderr, "open error for %s\n", outputPath);
+            closedir(dir);
+            close(fd_result);
+            return 2;
+        }
+    
+        int gradeResult;
+        gradeResult = CompareContext(fd_result, fd_output);
+        if ((gradeResult = CompareContext(fd_result, fd_output)) == 1) {
+            return 1;
+        }
+        else if (gradeResult == 2) {
+            return 2;
+        }
+    
+        close(fd_result);
+        close(fd_output);
+    }
+
+    closedir(dir);
+
+    //  채점 결과가 모두 맞은 경우
     return 0;
 }

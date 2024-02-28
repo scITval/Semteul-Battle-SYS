@@ -10,6 +10,11 @@ int language;      // 제출 언어
 int timeLimit;     // 시간 제한
 int memLimit;      // 메모리 제한
 
+typedef struct {
+    int idx;
+    char arr[BUFFER_SIZE];
+} String;
+
 int Compile(void);
 int IsCompileError(void);
 int ExecProgram(void);

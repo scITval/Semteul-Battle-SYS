@@ -65,11 +65,23 @@ int main(void) {
 
     int execResult;
     if ((execResult = ExecProgram()) == 1) { //런타임 에러
+        FILE *fp_result;
+        char resultPath[PATH_MAXLEN];
+        sprintf(resultPath, "%s/result_%d.txt", GetResultPath(), submitNumber);
+        if ((fp_result = fopen(resultPath, "w")) == NULL) {
+            fprintf(stderr, "create error for %s\n", resultPath);
+            exit(1);
+        }
+
+        // 코드의 실행 결과로 5를 씀
+        fprintf(fp_result, "5");
         // printf("런타임 에러 O\n");
+
+        fclose(fp_result);
         return 0;
     }
     else if (execResult == 2) { // ExecProgram() 함수 호출 에러
-        fprintf(stderr, "execProgram() error in grade.c\n");
+        fprintf(stderr, "ExecProgram() error in grade.c\n");
         exit(1);
     }
     else if (execResult == 3) { // 시간 초과
@@ -88,6 +100,9 @@ int main(void) {
         fclose(fp_result);
         return 0;
     }
+    //
+    // 메모리 검사는 아직 미구현
+    //
     else if (execResult == 4) { // 메모리 초과
         FILE *fp_result;
         char resultPath[PATH_MAXLEN];
@@ -105,6 +120,42 @@ int main(void) {
         return 0;
     }
     // printf("런타임 에러 X\n");
+
+    int gradeResult;
+    if ((gradeResult = Grade()) == 0) { // 채점 결과가 다 맞은 경우
+        FILE *fp_result;
+        char resultPath[PATH_MAXLEN];
+        sprintf(resultPath, "%s/result_%d.txt", GetResultPath(), submitNumber);
+        if ((fp_result = fopen(resultPath, "w")) == NULL) {
+            fprintf(stderr, "create error for %s\n", resultPath);
+            exit(1);
+        }
+
+        // 코드의 실행 결과로 0를 씀
+        fprintf(fp_result, "0");
+
+        fclose(fp_result);
+        return 0;
+    }
+    else if (gradeResult == 1) { // 채점 결과가 하나라도 틀린 경우
+        FILE *fp_result;
+        char resultPath[PATH_MAXLEN];
+        sprintf(resultPath, "%s/result_%d.txt", GetResultPath(), submitNumber);
+        if ((fp_result = fopen(resultPath, "w")) == NULL) {
+            fprintf(stderr, "create error for %s\n", resultPath);
+            exit(1);
+        }
+
+        // 코드의 실행 결과로 1를 씀
+        fprintf(fp_result, "1");
+
+        fclose(fp_result);
+        return 0;
+    }
+    else if (gradeResult == 2) { // Grade() 함수 호출 에러
+        fprintf(stderr, "Grade() error in grade.c\n");
+        exit(1);
+    }
 
     return 0;
 }
